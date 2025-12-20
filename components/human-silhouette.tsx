@@ -12,169 +12,185 @@ export function HumanSilhouette() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Set canvas size
-    const width = 200
-    const height = 500
+    // Set canvas size for hologram
+    const width = 400
+    const height = 600
     canvas.width = width
     canvas.height = height
 
     // Clear canvas
     ctx.clearRect(0, 0, width, height)
 
-    const centerX = 100
+    const centerX = 200
+    const scale = 1.2
 
-    // Create a path for the entire body silhouette
+    ctx.save()
+    ctx.translate(centerX, height - 50)
+
+    // Draw multiple concentric circles for platform effect
+    for (let i = 5; i > 0; i--) {
+      ctx.beginPath()
+      ctx.arc(0, 0, 80 + i * 15, 0, Math.PI * 2)
+      ctx.strokeStyle = `rgba(6, 182, 212, ${0.2 + i * 0.1})`
+      ctx.lineWidth = 2
+      ctx.stroke()
+    }
+
+    // Platform grid lines
+    for (let angle = 0; angle < 360; angle += 30) {
+      ctx.beginPath()
+      ctx.moveTo(0, 0)
+      const rad = (angle * Math.PI) / 180
+      ctx.lineTo(Math.cos(rad) * 140, Math.sin(rad) * 140)
+      ctx.strokeStyle = "rgba(6, 182, 212, 0.2)"
+      ctx.lineWidth = 1
+      ctx.stroke()
+    }
+
+    ctx.restore()
+
     ctx.beginPath()
 
-    // Start from top of head
-    ctx.moveTo(centerX, 10)
+    // Head (ellipse)
+    ctx.save()
+    ctx.translate(centerX, 40 * scale)
+    ctx.scale(1, 1.2)
+    ctx.arc(0, 0, 25, 0, Math.PI * 2)
+    ctx.restore()
 
-    // Head (right side going down)
-    ctx.bezierCurveTo(centerX + 28, 15, centerX + 30, 25, centerX + 28, 40)
-    ctx.bezierCurveTo(centerX + 28, 50, centerX + 26, 60, centerX + 22, 68)
+    // Neck
+    ctx.moveTo(centerX - 12, 70 * scale)
+    ctx.lineTo(centerX - 12, 85 * scale)
+    ctx.lineTo(centerX + 12, 85 * scale)
+    ctx.lineTo(centerX + 12, 70 * scale)
 
-    // Neck to right shoulder
-    ctx.bezierCurveTo(centerX + 20, 75, centerX + 25, 82, centerX + 38, 95)
+    // Body outline - right side going down
+    ctx.moveTo(centerX + 12, 85 * scale)
+    ctx.bezierCurveTo(centerX + 35, 90 * scale, centerX + 48, 95 * scale, centerX + 52, 110 * scale)
+    ctx.bezierCurveTo(centerX + 54, 130 * scale, centerX + 54, 150 * scale, centerX + 52, 170 * scale)
+    ctx.bezierCurveTo(centerX + 51, 175 * scale, centerX + 50, 180 * scale, centerX + 50, 188 * scale)
+    ctx.bezierCurveTo(centerX + 50, 205 * scale, centerX + 51, 220 * scale, centerX + 52, 235 * scale)
+    ctx.bezierCurveTo(centerX + 52, 243 * scale, centerX + 50, 248 * scale, centerX + 46, 250 * scale)
+    ctx.bezierCurveTo(centerX + 42, 251 * scale, centerX + 38, 250 * scale, centerX + 36, 247 * scale)
+    ctx.bezierCurveTo(centerX + 38, 243 * scale, centerX + 40, 230 * scale, centerX + 42, 215 * scale)
+    ctx.bezierCurveTo(centerX + 43, 200 * scale, centerX + 44, 185 * scale, centerX + 44, 173 * scale)
+    ctx.bezierCurveTo(centerX + 44, 165 * scale, centerX + 43, 155 * scale, centerX + 42, 145 * scale)
+    ctx.bezierCurveTo(centerX + 40, 130 * scale, centerX + 32, 120 * scale, centerX + 26, 113 * scale)
+    ctx.bezierCurveTo(centerX + 24, 130 * scale, centerX + 22, 150 * scale, centerX + 20, 170 * scale)
+    ctx.bezierCurveTo(centerX + 18, 190 * scale, centerX + 17, 205 * scale, centerX + 16, 220 * scale)
+    ctx.bezierCurveTo(centerX + 16, 230 * scale, centerX + 18, 237 * scale, centerX + 20, 243 * scale)
+    ctx.bezierCurveTo(centerX + 22, 270 * scale, centerX + 23, 295 * scale, centerX + 23, 320 * scale)
+    ctx.bezierCurveTo(centerX + 23, 330 * scale, centerX + 22, 337 * scale, centerX + 22, 345 * scale)
+    ctx.bezierCurveTo(centerX + 22, 370 * scale, centerX + 22, 395 * scale, centerX + 22, 420 * scale)
+    ctx.bezierCurveTo(centerX + 22, 430 * scale, centerX + 20, 437 * scale, centerX + 16, 440 * scale)
+    ctx.bezierCurveTo(centerX + 12, 442 * scale, centerX + 8, 441 * scale, centerX + 6, 438 * scale)
+    ctx.lineTo(centerX + 6, 445 * scale)
+    ctx.lineTo(centerX - 6, 445 * scale)
 
-    // Right shoulder to arm
-    ctx.bezierCurveTo(centerX + 45, 100, centerX + 50, 105, centerX + 52, 115)
-
-    // Right upper arm
-    ctx.bezierCurveTo(centerX + 54, 135, centerX + 54, 150, centerX + 52, 165)
-
-    // Right elbow
-    ctx.bezierCurveTo(centerX + 51, 172, centerX + 50, 178, centerX + 50, 185)
-
-    // Right forearm
-    ctx.bezierCurveTo(centerX + 50, 200, centerX + 51, 215, centerX + 52, 230)
-
-    // Right hand
-    ctx.bezierCurveTo(centerX + 52, 238, centerX + 50, 243, centerX + 46, 245)
-    ctx.bezierCurveTo(centerX + 42, 246, centerX + 38, 245, centerX + 36, 242)
-
-    // Back up right arm inner side
-    ctx.bezierCurveTo(centerX + 38, 238, centerX + 40, 225, centerX + 42, 210)
-    ctx.bezierCurveTo(centerX + 43, 195, centerX + 44, 180, centerX + 44, 168)
-
-    // Right elbow inner
-    ctx.bezierCurveTo(centerX + 44, 160, centerX + 43, 150, centerX + 42, 140)
-
-    // Right armpit to torso
-    ctx.bezierCurveTo(centerX + 40, 125, centerX + 32, 115, centerX + 26, 108)
-
-    // Right torso side
-    ctx.bezierCurveTo(centerX + 24, 125, centerX + 22, 145, centerX + 20, 165)
-    ctx.bezierCurveTo(centerX + 18, 185, centerX + 17, 200, centerX + 16, 215)
-
-    // Right hip
-    ctx.bezierCurveTo(centerX + 16, 225, centerX + 18, 232, centerX + 20, 238)
-
-    // Right thigh outer
-    ctx.bezierCurveTo(centerX + 22, 265, centerX + 23, 290, centerX + 23, 315)
-
-    // Right knee outer
-    ctx.bezierCurveTo(centerX + 23, 325, centerX + 22, 332, centerX + 22, 340)
-
-    // Right calf outer
-    ctx.bezierCurveTo(centerX + 22, 365, centerX + 22, 390, centerX + 22, 415)
-
-    // Right foot outer
-    ctx.bezierCurveTo(centerX + 22, 425, centerX + 20, 432, centerX + 16, 435)
-    ctx.bezierCurveTo(centerX + 12, 437, centerX + 8, 436, centerX + 6, 433)
-
-    // Right foot bottom
-    ctx.lineTo(centerX + 6, 440)
-    ctx.lineTo(centerX - 6, 440)
-
-    // Left foot outer
-    ctx.bezierCurveTo(centerX - 8, 436, centerX - 12, 437, centerX - 16, 435)
-    ctx.bezierCurveTo(centerX - 20, 432, centerX - 22, 425, centerX - 22, 415)
-
-    // Left calf outer
-    ctx.bezierCurveTo(centerX - 22, 390, centerX - 22, 365, centerX - 22, 340)
-
-    // Left knee outer
-    ctx.bezierCurveTo(centerX - 22, 332, centerX - 23, 325, centerX - 23, 315)
-
-    // Left thigh outer
-    ctx.bezierCurveTo(centerX - 23, 290, centerX - 22, 265, centerX - 20, 238)
-
-    // Left hip
-    ctx.bezierCurveTo(centerX - 18, 232, centerX - 16, 225, centerX - 16, 215)
-
-    // Left torso side
-    ctx.bezierCurveTo(centerX - 17, 200, centerX - 18, 185, centerX - 20, 165)
-    ctx.bezierCurveTo(centerX - 22, 145, centerX - 24, 125, centerX - 26, 108)
-
-    // Left armpit to torso
-    ctx.bezierCurveTo(centerX - 32, 115, centerX - 40, 125, centerX - 42, 140)
-
-    // Left elbow inner
-    ctx.bezierCurveTo(centerX - 43, 150, centerX - 44, 160, centerX - 44, 168)
-
-    // Left forearm inner
-    ctx.bezierCurveTo(centerX - 44, 180, centerX - 43, 195, centerX - 42, 210)
-    ctx.bezierCurveTo(centerX - 40, 225, centerX - 38, 238, centerX - 36, 242)
-
-    // Left hand
-    ctx.bezierCurveTo(centerX - 38, 245, centerX - 42, 246, centerX - 46, 245)
-    ctx.bezierCurveTo(centerX - 50, 243, centerX - 52, 238, centerX - 52, 230)
-
-    // Left forearm outer
-    ctx.bezierCurveTo(centerX - 51, 215, centerX - 50, 200, centerX - 50, 185)
-
-    // Left elbow
-    ctx.bezierCurveTo(centerX - 50, 178, centerX - 51, 172, centerX - 52, 165)
-
-    // Left upper arm
-    ctx.bezierCurveTo(centerX - 54, 150, centerX - 54, 135, centerX - 52, 115)
-
-    // Left shoulder to arm
-    ctx.bezierCurveTo(centerX - 50, 105, centerX - 45, 100, centerX - 38, 95)
-
-    // Left shoulder to neck
-    ctx.bezierCurveTo(centerX - 25, 82, centerX - 20, 75, centerX - 22, 68)
-
-    // Neck to head
-    ctx.bezierCurveTo(centerX - 26, 60, centerX - 28, 50, centerX - 28, 40)
-    ctx.bezierCurveTo(centerX - 30, 25, centerX - 28, 15, centerX, 10)
+    // Left side going up
+    ctx.bezierCurveTo(centerX - 8, 441 * scale, centerX - 12, 442 * scale, centerX - 16, 440 * scale)
+    ctx.bezierCurveTo(centerX - 20, 437 * scale, centerX - 22, 430 * scale, centerX - 22, 420 * scale)
+    ctx.bezierCurveTo(centerX - 22, 395 * scale, centerX - 22, 370 * scale, centerX - 22, 345 * scale)
+    ctx.bezierCurveTo(centerX - 22, 337 * scale, centerX - 23, 330 * scale, centerX - 23, 320 * scale)
+    ctx.bezierCurveTo(centerX - 23, 295 * scale, centerX - 22, 270 * scale, centerX - 20, 243 * scale)
+    ctx.bezierCurveTo(centerX - 18, 237 * scale, centerX - 16, 230 * scale, centerX - 16, 220 * scale)
+    ctx.bezierCurveTo(centerX - 17, 205 * scale, centerX - 18, 190 * scale, centerX - 20, 170 * scale)
+    ctx.bezierCurveTo(centerX - 22, 150 * scale, centerX - 24, 130 * scale, centerX - 26, 113 * scale)
+    ctx.bezierCurveTo(centerX - 32, 120 * scale, centerX - 40, 130 * scale, centerX - 42, 145 * scale)
+    ctx.bezierCurveTo(centerX - 43, 155 * scale, centerX - 44, 165 * scale, centerX - 44, 173 * scale)
+    ctx.bezierCurveTo(centerX - 44, 185 * scale, centerX - 43, 200 * scale, centerX - 42, 215 * scale)
+    ctx.bezierCurveTo(centerX - 40, 230 * scale, centerX - 38, 243 * scale, centerX - 36, 247 * scale)
+    ctx.bezierCurveTo(centerX - 38, 250 * scale, centerX - 42, 251 * scale, centerX - 46, 250 * scale)
+    ctx.bezierCurveTo(centerX - 50, 248 * scale, centerX - 52, 243 * scale, centerX - 52, 235 * scale)
+    ctx.bezierCurveTo(centerX - 51, 220 * scale, centerX - 50, 205 * scale, centerX - 50, 188 * scale)
+    ctx.bezierCurveTo(centerX - 50, 180 * scale, centerX - 51, 175 * scale, centerX - 52, 170 * scale)
+    ctx.bezierCurveTo(centerX - 54, 150 * scale, centerX - 54, 130 * scale, centerX - 52, 110 * scale)
+    ctx.bezierCurveTo(centerX - 48, 95 * scale, centerX - 35, 90 * scale, centerX - 12, 85 * scale)
 
     ctx.closePath()
 
-    // Fill the body with cyan color
-    ctx.fillStyle = "rgba(6, 182, 212, 0.8)"
+    const gradient = ctx.createLinearGradient(centerX - 60, 0, centerX + 60, height)
+    gradient.addColorStop(0, "rgba(6, 182, 212, 0.6)")
+    gradient.addColorStop(0.5, "rgba(6, 182, 212, 0.8)")
+    gradient.addColorStop(1, "rgba(6, 182, 212, 0.6)")
+    ctx.fillStyle = gradient
     ctx.fill()
 
-    // Draw cyan outline/stroke
+    // Bright cyan outline
     ctx.strokeStyle = "#06b6d4"
-    ctx.lineWidth = 2
+    ctx.lineWidth = 3
     ctx.stroke()
 
-    // Add some internal muscle definition lines
+    ctx.save()
+
+    // Lungs
+    ctx.fillStyle = "rgba(255, 120, 50, 0.7)"
+    ctx.beginPath()
+    // Right lung
+    ctx.ellipse(centerX + 12, 110 * scale, 15, 25, 0, 0, Math.PI * 2)
+    ctx.fill()
+    // Left lung
+    ctx.beginPath()
+    ctx.ellipse(centerX - 12, 110 * scale, 15, 25, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Heart between lungs
+    ctx.fillStyle = "rgba(255, 80, 80, 0.7)"
+    ctx.beginPath()
+    ctx.ellipse(centerX, 115 * scale, 8, 10, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Digestive system
+    ctx.fillStyle = "rgba(255, 140, 60, 0.6)"
+    ctx.beginPath()
+    ctx.ellipse(centerX, 160 * scale, 18, 35, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Pelvis/hip area
+    ctx.fillStyle = "rgba(255, 120, 50, 0.7)"
+    ctx.beginPath()
+    ctx.ellipse(centerX, 230 * scale, 22, 18, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.restore()
+
     ctx.strokeStyle = "rgba(6, 182, 212, 0.4)"
     ctx.lineWidth = 1.5
 
-    // Chest muscles
+    // Chest structure
     ctx.beginPath()
-    ctx.moveTo(centerX - 18, 105)
-    ctx.quadraticCurveTo(centerX, 100, centerX + 18, 105)
+    ctx.moveTo(centerX - 20, 105 * scale)
+    ctx.quadraticCurveTo(centerX, 100 * scale, centerX + 20, 105 * scale)
     ctx.stroke()
 
-    // Abs
+    // Ribcage lines
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath()
+      ctx.arc(centerX, (110 + i * 15) * scale, 18 - i * 2, Math.PI, 0)
+      ctx.stroke()
+    }
+
+    // Ab muscles
     ctx.beginPath()
-    ctx.moveTo(centerX - 12, 130)
-    ctx.quadraticCurveTo(centerX, 128, centerX + 12, 130)
+    ctx.moveTo(centerX - 14, 135 * scale)
+    ctx.quadraticCurveTo(centerX, 133 * scale, centerX + 14, 135 * scale)
     ctx.stroke()
 
     ctx.beginPath()
-    ctx.moveTo(centerX - 12, 155)
-    ctx.quadraticCurveTo(centerX, 153, centerX + 12, 155)
+    ctx.moveTo(centerX - 14, 160 * scale)
+    ctx.quadraticCurveTo(centerX, 158 * scale, centerX + 14, 160 * scale)
     ctx.stroke()
 
     // Center line
     ctx.beginPath()
-    ctx.moveTo(centerX, 95)
-    ctx.lineTo(centerX, 200)
+    ctx.moveTo(centerX, 100 * scale)
+    ctx.lineTo(centerX, 210 * scale)
+    ctx.stroke()
+
+    // Leg muscle definition
+    ctx.beginPath()
+    ctx.moveTo(centerX, 245 * scale)
+    ctx.lineTo(centerX, 440 * scale)
     ctx.stroke()
   }, [])
 
@@ -182,19 +198,11 @@ export function HumanSilhouette() {
     <div className="relative">
       <canvas
         ref={canvasRef}
-        className="w-40 h-96 md:w-48 md:h-[450px]"
-        style={{ filter: "drop-shadow(0 0 12px rgba(6, 182, 212, 0.6))" }}
+        className="w-full h-full"
+        style={{
+          filter: "drop-shadow(0 0 20px rgba(6, 182, 212, 0.8)) drop-shadow(0 0 40px rgba(6, 182, 212, 0.4))",
+        }}
       />
-
-      {/* Horizontal measurement lines */}
-      <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-evenly pr-2">
-        {[...Array(9)].map((_, i) => (
-          <div key={i} className="flex items-center gap-1">
-            <div className="h-0.5 w-8 bg-cyan-500" />
-            <div className="w-1 h-1 rounded-full bg-cyan-500" />
-          </div>
-        ))}
-      </div>
     </div>
   )
 }

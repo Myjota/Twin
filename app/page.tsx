@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { getSession } from "@/lib/auth"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { HumanSilhouette } from "@/components/human-silhouette"
+import { HolographicHumanClient } from "@/components/holographic-human-client"
 
 export default async function HomePage() {
   const user = await getSession()
@@ -34,10 +34,11 @@ export default async function HomePage() {
           <p className="text-xl text-cyan-300/80">Universal Personal Health Platform</p>
         </div>
 
-        {/* Human Figure - Center Top */}
         <div className="flex justify-center mb-16">
-          <div className="border-4 border-cyan-500 rounded-3xl bg-[#002244]/90 backdrop-blur-sm p-12 shadow-2xl shadow-cyan-500/20">
-            <HumanSilhouette />
+          <div className="border-4 border-cyan-500 rounded-3xl bg-[#002244]/90 backdrop-blur-sm shadow-2xl shadow-cyan-500/30 overflow-hidden">
+            <div className="w-[600px] h-[700px]">
+              <HolographicHumanClient />
+            </div>
           </div>
         </div>
 
@@ -65,7 +66,7 @@ export default async function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                 />
               </svg>
             </div>
