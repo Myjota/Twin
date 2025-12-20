@@ -1,7 +1,7 @@
 "use client"
 
 import { Canvas } from "@react-three/fiber"
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
+import { OrbitControls, PerspectiveCamera, Line } from "@react-three/drei"
 import { useRef, useMemo } from "react"
 import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
@@ -260,17 +260,17 @@ function HolographicPlatform() {
         const z2 = Math.sin(angle) * 4
 
         return (
-          <line key={`line-${i}`}>
-            <bufferGeometry>
-              <bufferAttribute
-                attach="attributes-position"
-                count={2}
-                array={new Float32Array([x1, 0.02, z1, x2, 0.02, z2])}
-                itemSize={3}
-              />
-            </bufferGeometry>
-            <lineBasicMaterial color="#00ffff" transparent opacity={0.3} />
-          </line>
+          <Line
+            key={`line-${i}`}
+            points={[
+              [x1, 0.02, z1],
+              [x2, 0.02, z2],
+            ]}
+            color="#00ffff"
+            lineWidth={1}
+            transparent
+            opacity={0.3}
+          />
         )
       })}
     </group>
