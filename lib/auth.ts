@@ -37,45 +37,72 @@ export async function verifyToken(token: string): Promise<User | null> {
 }
 
 export async function getSession(): Promise<User | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")
+  try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("auth-token")
 
-  if (!token) {
+    if (!token) {
+      console.log("[Auth] No auth token found")
+      return null
+    }
+
+    console.log("[Auth] Token found, verifying...")
+    const tokenData = await verifyToken(token.value)
+    if (!tokenData) {
+      console.error("[Auth] Token verification failed")
+      return null
+    }
+
+    console.log("[Auth] Token verified, getting user data from DB for user ID:", tokenData.id)
+    // Get full user data from database
+    const users = await query("SELECT id, email, full_name, date_of_birth FROM users WHERE id = $1", [tokenData.id])
+    
+    if (users.length === 0) {
+      console.error("[Auth] User not found in database for ID:", tokenData.id)
+      return null
+    }
+
+    const user = users[0] as any
+    console.log("[Auth] User data retrieved:", { id: user.id, email: user.email, full_name: user.full_name })
+    return {
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      date_of_birth: user.date_of_birth,
+    }
+  } catch (error) {
+    console.error("[Auth] Error in getSession:", error)
+    if (error instanceof Error) {
+      console.error("[Auth] Error message:", error.message)
+      console.error("[Auth] Error stack:", error.stack)
+    }
     return null
-  }
-
-  const tokenData = await verifyToken(token.value)
-  if (!tokenData) {
-    return null
-  }
-
-  // Get full user data from database
-  const users = await query("SELECT id, email, full_name, date_of_birth FROM users WHERE id = $1", [tokenData.id])
-  
-  if (users.length === 0) {
-    return null
-  }
-
-  const user = users[0] as any
-  return {
-    id: user.id,
-    email: user.email,
-    full_name: user.full_name,
-    date_of_birth: user.date_of_birth,
   }
 }
 
 export async function setSession(user: User): Promise<void> {
-  const token = await createToken(user)
-  const cookieStore = await cookies()
+  try {
+    console.log("[Auth] Creating session for user:", user.id, user.email)
+    const token = await createToken(user)
+    console.log("[Auth] Token created, setting cookie...")
+    const cookieStore = await cookies()
 
-  cookieStore.set("auth-token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: "/",
-  })
+    cookieStore.set("auth-token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    })
+    console.log("[Auth] Session cookie set successfully")
+  } catch (error) {
+    console.error("[Auth] Error setting session:", error)
+    if (error instanceof Error) {
+      console.error("[Auth] Error message:", error.message)
+      console.error("[Auth] Error stack:", error.stack)
+    }
+    throw error
+  }
 }
 
 export async function clearSession(): Promise<void> {

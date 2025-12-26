@@ -24,25 +24,50 @@ export default function LoginPage() {
     setError("")
     setLoading(true)
 
+    console.log("[Login] Starting login process...", { email })
+
     try {
+      console.log("[Login] Sending request to /api/auth/login")
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
 
-      const data = await response.json()
+      console.log("[Login] Response status:", response.status, response.statusText)
 
-      if (!response.ok) {
-        setError(data.error || "Login failed")
+      let data
+      try {
+        data = await response.json()
+        console.log("[Login] Response data:", data)
+      } catch (parseError) {
+        console.error("[Login] Failed to parse response JSON:", parseError)
+        const text = await response.text()
+        console.error("[Login] Response text:", text)
+        setError("Server returned invalid response. Check console for details.")
+        setLoading(false)
         return
       }
 
+      if (!response.ok) {
+        console.error("[Login] Login failed:", data.error || "Unknown error")
+        setError(data.error || "Login failed")
+        setLoading(false)
+        return
+      }
+
+      console.log("[Login] Login successful, redirecting to dashboard...")
       router.push("/dashboard")
       router.refresh()
     } catch (err) {
-      setError("An error occurred. Please try again.")
-    } finally {
+      console.error("[Login] Error occurred:", err)
+      if (err instanceof Error) {
+        console.error("[Login] Error message:", err.message)
+        console.error("[Login] Error stack:", err.stack)
+        setError(`Error: ${err.message}`)
+      } else {
+        setError("An error occurred. Please try again.")
+      }
       setLoading(false)
     }
   }
