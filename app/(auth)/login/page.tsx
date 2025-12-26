@@ -57,8 +57,8 @@ export default function LoginPage() {
       }
 
       console.log("[Login] Login successful, redirecting to dashboard...")
-      router.push("/dashboard")
-      router.refresh()
+      // Use window.location for full page reload to ensure cookie is read
+      window.location.href = "/dashboard"
     } catch (err) {
       console.error("[Login] Error occurred:", err)
       if (err instanceof Error) {

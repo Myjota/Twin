@@ -4,9 +4,12 @@ import { query } from "@/lib/db"
 import { DashboardClient } from "@/components/dashboard-client"
 
 export default async function DashboardPage() {
+  console.log("[Dashboard] Loading dashboard page...")
   const user = await getSession()
+  console.log("[Dashboard] User session:", user ? { id: user.id, email: user.email } : "null")
 
   if (!user) {
+    console.error("[Dashboard] No user session, redirecting to login...")
     redirect("/login")
   }
 
