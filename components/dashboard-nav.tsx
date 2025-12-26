@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Menu } from "lucide-react"
+import { Menu, LogOut } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -55,8 +55,8 @@ export function DashboardNav({ user, onLogout }: DashboardNavProps) {
             <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg">
               <span className="text-sm font-medium text-gray-700">{user.full_name || user.email}</span>
             </div>
-            <Button variant="ghost" size="sm" onClick={onLogout} className="hidden md:flex">
-              <span className="h-4 w-4 mr-2">Logout Icon</span>
+            <Button variant="outline" size="sm" onClick={onLogout} className="hidden md:flex">
+              <LogOut className="h-4 w-4 mr-2" />
               Logout
             </Button>
 
@@ -99,10 +99,13 @@ export function DashboardNav({ user, onLogout }: DashboardNavProps) {
               >
                 Insights
               </Link>
-              <Button variant="outline" size="sm" onClick={onLogout} className="justify-start bg-transparent">
-                <span className="h-4 w-4 mr-2">Logout Icon</span>
-                Logout
-              </Button>
+              <div className="px-2 py-2 border-t border-gray-200 mt-2">
+                <div className="text-sm font-medium text-gray-700 mb-2 px-2">{user.full_name || user.email}</div>
+                <Button variant="outline" size="sm" onClick={onLogout} className="w-full justify-start">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
             </div>
           </div>
         )}
