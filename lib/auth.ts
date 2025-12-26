@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
 import { SignJWT, jwtVerify } from "jose"
 import { cookies } from "next/headers"
+import { query } from "./db"
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "medical-twin-secret-key-change-in-production")
 
@@ -43,7 +44,25 @@ export async function getSession(): Promise<User | null> {
     return null
   }
 
-  return verifyToken(token.value)
+  const tokenData = await verifyToken(token.value)
+  if (!tokenData) {
+    return null
+  }
+
+  // Get full user data from database
+  const users = await query("SELECT id, email, full_name, date_of_birth FROM users WHERE id = $1", [tokenData.id])
+  
+  if (users.length === 0) {
+    return null
+  }
+
+  const user = users[0] as any
+  return {
+    id: user.id,
+    email: user.email,
+    full_name: user.full_name,
+    date_of_birth: user.date_of_birth,
+  }
 }
 
 export async function setSession(user: User): Promise<void> {
